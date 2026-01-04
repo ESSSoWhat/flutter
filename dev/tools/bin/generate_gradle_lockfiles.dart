@@ -247,6 +247,18 @@ subprojects {
           lockAllConfigurations()
         }
     }
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { details ->
+                if (details.requested.group == 'org.jetbrains.kotlin' && 
+                    (details.requested.name.startsWith('kotlin-stdlib') || 
+                     details.requested.name == 'kotlin-stdlib')) {
+                    details.useVersion('2.2.20')
+                    details.because('Force kotlin-stdlib to match Kotlin compiler version')
+                }
+            }
+        }
+    }
 }
 
 tasks.register("clean", Delete) {
@@ -292,7 +304,7 @@ buildscript {
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
     id "com.android.application" version "8.13.2" apply false
-    id "org.jetbrains.kotlin.android" version "2.2.0" apply false
+    id "org.jetbrains.kotlin.android" version "2.3.0" apply false
 }
 
 include ":app"
@@ -388,7 +400,7 @@ buildscript {
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version "8.13.2" apply false
-    id("org.jetbrains.kotlin.android") version "2.2.0" apply false
+    id("org.jetbrains.kotlin.android") version "2.3.0" apply false
 }
 
 include(":app")
@@ -399,7 +411,7 @@ distributionBase=GRADLE_USER_HOME
 distributionPath=wrapper/dists
 zipStoreBase=GRADLE_USER_HOME
 zipStorePath=wrapper/dists
-distributionUrl=https\://services.gradle.org/distributions/gradle-9.0.0-all.zip
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.14-all.zip
 ''';
 
 Iterable<Directory> discoverAndroidDirectories(Directory repoRoot) {

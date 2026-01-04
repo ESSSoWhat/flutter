@@ -36,9 +36,17 @@ WidgetPreview buildWidgetPreview({
   required Object? Function() previewFunction,
 }) {
   Widget Function() previewBuilder;
-  previewBuilder = () {
-    return Builder(builder: (BuildContext context) => previewFunction() as Widget);
-  };
+  // Support both Widget Function() and WidgetBuilder (Widget Function(BuildContext))
+  // to maintain backward compatibility with code that returns builder functions.
+  if (previewFunction is WidgetBuilder Function()) {
+    // If previewFunction returns a WidgetBuilder, wrap it in a Builder widget
+    previewBuilder = () {
+      return Builder(builder: previewFunction());
+    };
+  } else {
+    // Otherwise, treat previewFunction as returning Widget Function() directly
+    previewBuilder = previewFunction as Widget Function();
+  }
   return WidgetPreview(
     builder: previewBuilder,
     scriptUri: scriptUri,

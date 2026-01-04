@@ -49,7 +49,14 @@ class WidgetPreviewScaffoldDtdServices with DtdEditorService {
           'Please provide a valid DTD URI.',
         );
       }
-      dtdWsUri = Uri.parse(trimmedValue);
+      final Uri? parsedUri = Uri.tryParse(trimmedValue);
+      if (parsedUri == null) {
+        throw ArgumentError(
+          'Environment variable $kWidgetPreviewDtdUriEnvVar contains an invalid URI: "$trimmedValue". '
+          'Please provide a valid DTD URI.',
+        );
+      }
+      dtdWsUri = parsedUri;
     }
     dtd = await DartToolingDaemon.connect(dtdWsUri);
     unawaited(

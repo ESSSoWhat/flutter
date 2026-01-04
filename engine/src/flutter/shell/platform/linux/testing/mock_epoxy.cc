@@ -380,6 +380,9 @@ EGLImage _eglCreateImage(EGLDisplay dpy,
                          EGLenum target,
                          EGLClientBuffer buffer,
                          const EGLAttrib* attrib_list) {
+  if (!mock) {
+    return EGL_NO_IMAGE;
+  }
   mock->eglCreateImage(dpy, ctx, target, buffer, attrib_list);
   return &mock_image;
 }

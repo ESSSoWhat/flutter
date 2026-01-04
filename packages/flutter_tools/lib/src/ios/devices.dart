@@ -359,10 +359,10 @@ class IOSDevice extends Device {
   @override
   bool isConnected;
 
-  bool devModeEnabled = false;
+  var devModeEnabled = false;
 
   /// Device has trusted this computer and paired.
-  bool isPaired = false;
+  var isPaired = false;
 
   /// CoreDevice is a device connectivity stack introduced in Xcode 15. Devices
   /// with iOS 17 or greater are CoreDevices.
@@ -1463,7 +1463,7 @@ class IOSDeviceLogReader extends DeviceLogReader {
   final _fallbackStreamFlutterMessages = <String>[];
 
   /// Used to track if a message prefixed with "flutter:" has been received from the primary log.
-  bool primarySourceFlutterLogReceived = false;
+  var primarySourceFlutterLogReceived = false;
 
   /// There are three potential logging sources: `idevicesyslog`, `ios-deploy`,
   /// and Unified Logging (Dart VM). When using more than one of these logging
@@ -1876,7 +1876,7 @@ class IOSDevicePortForwarder extends DevicePortForwarder {
   final OperatingSystemUtils _operatingSystemUtils;
 
   @override
-  List<ForwardedPort> forwardedPorts = <ForwardedPort>[];
+  var forwardedPorts = <ForwardedPort>[];
 
   @visibleForTesting
   void addForwardedPorts(List<ForwardedPort> ports) {

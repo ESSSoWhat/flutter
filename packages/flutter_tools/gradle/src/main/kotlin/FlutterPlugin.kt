@@ -164,10 +164,11 @@ class FlutterPlugin : Plugin<Project> {
             // --splits-per-abi is used due to conflicting configuration. This approach
             // adds them programmatically only when splits are not configured.
             //
-            // Note: The plugin overwrites any user-specified abiFilters by setting
-            // DEFAULT_PLATFORMS. If users want to override these defaults, they must
-            // explicitly reconfigure abiFilters in their build.gradle after the plugin
-            // runs, or use splits-per-abi to control ABI filtering.
+            // Note: The plugin sets DEFAULT_PLATFORMS only when abiFilters.isEmpty().
+            // If users have already specified abiFilters, those are preserved. Users can
+            // override the defaults by explicitly configuring abiFilters in their build.gradle
+            // before the plugin runs, or by reconfiguring abiFilters after the plugin runs,
+            // or by using splits-per-abi to control ABI filtering.
             FlutterPluginUtils.getAndroidExtension(project).buildTypes.forEach { buildType ->
                 // Only apply default abiFilters if the user hasn't already specified them.
                 if (buildType.ndk.abiFilters.isEmpty()) {
@@ -275,17 +276,13 @@ class FlutterPlugin : Plugin<Project> {
                             .getDefaultProguardFile("proguard-android-optimize.txt"),
                         flutterProguardRules
                     )
-                    // Check for proguard-rules.pro at android/app/proguard-rules.pro relative to
-                    // the project root. The file is located at the app module level in the Flutter
-                    // project structure.
-                    val rootProject = project.rootProject
-                    val proguardRulesFile = rootProject.file("android/app/proguard-rules.pro")
-                    if (proguardRulesFile.exists()) {
-                        // Add the File object directly to ensure it resolves to the same file
-                        // that was checked for existence. proguardFiles() accepts File objects
-                        // and will use the absolute path.
-                        proguardFilesList.add(proguardRulesFile)
-                    }
+                    // Always add "proguard-rules.pro" as a relative path string, which Gradle will
+                    // resolve relative to the app module directory. This maintains backward
+                    // compatibility with projects that have proguard-rules.pro in the app module,
+                    // and also works if the file doesn't exist (Gradle will simply ignore it).
+                    // The original behavior was to always include this path, allowing users to
+                    // place the file wherever Gradle expects it relative to the app module.
+                    proguardFilesList.add("proguard-rules.pro")
                     proguardFiles(*proguardFilesList.toTypedArray())
                 }
             }

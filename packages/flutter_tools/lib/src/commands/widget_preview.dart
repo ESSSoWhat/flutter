@@ -458,6 +458,14 @@ final class WidgetPreviewStartCommand extends WidgetPreviewSubCommandBase with C
       // WARNING: this log message is used by test/integration.shard/widget_preview_test.dart
       logger.printStatus('Launching the Widget Preview Scaffold on ${device.displayName}...');
 
+      // Ensure DTD connection is established before passing URI to the preview scaffold.
+      final Uri? dtdUri = _dtdService.dtdUri;
+      if (dtdUri == null) {
+        throwToolExit(
+          'DTD connection URI is not available. Please ensure DTD is connected before launching the preview scaffold.',
+        );
+      }
+
       final debuggingOptions = DebuggingOptions.enabled(
         BuildInfo(
           BuildMode.debug,
@@ -468,7 +476,7 @@ final class WidgetPreviewStartCommand extends WidgetPreviewSubCommandBase with C
           // registered by the preview scaffold, but there's some uncertainty around how service
           // extensions will work with Flutter web embedded in VSCode without a Chrome debugger
           // connection.
-          dartDefines: <String>['$kWidgetPreviewDtdUriEnvVar=${_dtdService.dtdUri}'],
+          dartDefines: <String>['$kWidgetPreviewDtdUriEnvVar=$dtdUri'],
           packageConfigPath: widgetPreviewScaffoldProject.packageConfig.path,
           packageConfig: PackageConfig.parseBytes(
             widgetPreviewScaffoldProject.packageConfig.readAsBytesSync(),

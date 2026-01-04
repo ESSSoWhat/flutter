@@ -59,7 +59,7 @@ void main() {
 
   tearDown(() async {
     // Kill all processes that were started
-    for (final Process p in processes) {
+    for (final p in processes) {
       p.kill();
       await p.exitCode;
     }

@@ -356,10 +356,12 @@ deps = {
    Var('dart_git') + '/external/github.com/google/vector_math.dart.git' + '@' + Var('dart_vector_math_rev'),
 
   'engine/src/flutter/third_party/dart/third_party/pkg/web':
-   Var('dart_git') + '/web.git' + '@' + Var('dart_web_rev'),
+   Var('dart_git') + '/external/github.com/dart-lang/web.git' + '@' + Var('dart_web_rev'),
 
   'engine/src/flutter/third_party/dart/third_party/pkg/webdev':
-   Var('dart_git') + '/webdev.git' + '@' + Var('dart_webdev_rev'),
+   Var('dart_git') + '/external/github.com/dart-lang/webdev.git' + '@' + Var('dart_webdev_rev'),
+
+
 
   'engine/src/flutter/third_party/dart/third_party/pkg/webdriver':
    Var('dart_git') + '/external/github.com/google/webdriver.dart.git' + '@' + Var('dart_webdriver_rev'),
@@ -611,6 +613,16 @@ deps = {
   'engine/src/flutter/third_party/android_tools': {
      'packages': [
        {
+        # WARNING: SDK version 36v3 introduces breaking Android changes.
+        # Before committing this bump, ensure:
+        # 1. Run Android API diff (SDK 34 → 36) to find removed/modified APIs
+        # 2. Update or replace any affected plugins or code paths
+        # 3. Build and run full test suites on Android 36 emulator/device
+        #    (including Android 16 large-screen/resizability scenarios)
+        # 4. Review Android 16 release notes for lifecycle/foreground service changes
+        # 5. Verify AGP/Gradle/JDK toolchain compatibility with API 36
+        # 6. Update CI configs and pins as needed
+        # 7. Document any required code or dependency changes in the PR
         'package': 'flutter/android/sdk/all/${{platform}}',
         'version': 'version:36v3'
        }

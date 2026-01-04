@@ -3787,6 +3787,7 @@ targets:
       task_name: basic_material_app_macos__compile
 
   - name: Mac build_ios_framework_module_test
+    presubmit: false
     recipe: devicelab/devicelab_drone
     timeout: 60
     properties:

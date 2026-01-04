@@ -47,7 +47,13 @@ class WidgetPreviewScaffoldDtdServices with DtdEditorService {
           'Environment variable $kWidgetPreviewDtdUriEnvVar is not set or is empty.',
         );
       }
-      return Uri.parse(trimmedValue);
+      try {
+        return Uri.parse(trimmedValue);
+      } on FormatException catch (e) {
+        throw ArgumentError(
+          'Environment variable $kWidgetPreviewDtdUriEnvVar contains an invalid URI: "$trimmedValue". ${e.message}',
+        );
+      }
     })();
     dtd = await DartToolingDaemon.connect(dtdWsUri);
     unawaited(

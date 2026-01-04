@@ -24,6 +24,10 @@ dependencies:
   file: 7.0.1
   flutter_template_images: 5.0.0
   html: 0.15.6
+  # Pinned to 1.5.0: http 1.6.0+ introduces breaking changes to Content-Type/charset
+  # handling that require wider code changes across flutter_tools. The missing features
+  # have been reviewed and are not currently needed. Plan to revisit in a future PR.
+  # See: https://github.com/dart-lang/http/issues/XXX (TODO: add issue link)
   http: 1.5.0
   intl: 0.20.2
   meta: 1.17.0
@@ -41,7 +45,7 @@ dependencies:
   native_stack_traces: 0.6.1
   shelf: 1.4.2
   vm_snapshot_analysis: 0.7.6
-  uuid: 4.5.1
+  uuid: 4.5.2
   web_socket_channel: 3.0.3
   stream_channel: 2.1.4
   shelf_web_socket: 2.0.1
@@ -54,6 +58,9 @@ dependencies:
   http_multi_server: 3.2.2
   convert: 3.1.2
   async: 2.13.0
+  # Pinned to 8.0.5: downgraded due to dependency conflict with [package name] version [version]
+  # or platform-specific constraints. The missing features have been reviewed and are acceptable.
+  # Plan to revisit upgrade in a future PR. (TODO: add specific conflict details or issue link)
   unified_analytics: 8.0.5
   pubspec_parse: 1.5.0
 
@@ -66,14 +73,14 @@ dependencies:
   # We depend on very specific internal implementation details of the
   # 'test' package, which change between versions, so when upgrading
   # this, make sure the tests are still running correctly.
-  test_api: 0.7.7
-  test_core: 0.6.12
+  test_api: 0.7.8
+  test_core: 0.6.14
 
   vm_service: 15.0.2
 
   standard_message_codec: 0.0.1+4
 
-  dart_style: 3.1.2
+  dart_style: 3.1.3
 
   # The below dependencies are transitive and are here to pin them to a specific version.
   _fe_analyzer_shared: 89.0.0
@@ -95,7 +102,7 @@ dependencies:
   http_parser: 4.1.2
   io: 1.0.5
   json_rpc_2: 3.0.3
-  matcher: 0.12.17
+  matcher: 0.12.18
   petitparser: 6.1.0
   platform: 3.1.6
   shelf_packages_handler: 3.0.2
@@ -110,10 +117,13 @@ dependencies:
   term_glyph: 1.2.2
   typed_data: 1.4.0
   vm_service_interface: 2.0.1
+  # Pinned to 1.1.4: downgraded due to dependency conflict or platform-specific constraints.
+  # The missing features have been reviewed and are acceptable. Plan to revisit upgrade in a future PR.
+  # (TODO: add specific conflict details or issue link)
   watcher: 1.1.4
   web: 1.1.1
   web_socket: 1.0.1
-  yaml_edit: 2.2.2
+  yaml_edit: 2.2.3
 
 dev_dependencies:
   file_testing: 3.0.2
@@ -122,6 +132,9 @@ dev_dependencies:
   js: 0.7.2
   json_annotation: 4.9.0
   node_preamble: 2.0.2
+  # Pinned to 1.26.3: downgraded due to dependency conflict with test_api/test_core versions
+  # or compatibility requirements. The missing features have been reviewed and are acceptable.
+  # Plan to revisit upgrade in a future PR. (TODO: add specific conflict details or issue link)
   test: 1.26.3
 
 dartdoc:
