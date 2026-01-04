@@ -164,15 +164,19 @@ class FlutterPlugin : Plugin<Project> {
             // --splits-per-abi is used due to conflicting configuration. This approach
             // adds them programmatically only when splits are not configured.
             //
-            // If the user has specified abiFilters in their build.gradle file, those
-            // settings will take precedence over these defaults.
+            // Note: The plugin overwrites any user-specified abiFilters by setting
+            // DEFAULT_PLATFORMS. If users want to override these defaults, they must
+            // explicitly reconfigure abiFilters in their build.gradle after the plugin
+            // runs, or use splits-per-abi to control ABI filtering.
             FlutterPluginUtils.getAndroidExtension(project).buildTypes.forEach { buildType ->
-                buildType.ndk.abiFilters.clear()
-                FlutterPluginConstants.DEFAULT_PLATFORMS.forEach { platform ->
-                    val abiValue: String =
-                        FlutterPluginConstants.PLATFORM_ARCH_MAP[platform]
-                            ?: throw GradleException("Invalid platform: $platform")
-                    buildType.ndk.abiFilters.add(abiValue)
+                // Only apply default abiFilters if the user hasn't already specified them.
+                if (buildType.ndk.abiFilters.isEmpty()) {
+                    FlutterPluginConstants.DEFAULT_PLATFORMS.forEach { platform ->
+                        val abiValue: String =
+                            FlutterPluginConstants.PLATFORM_ARCH_MAP[platform]
+                                ?: throw GradleException("Invalid platform: $platform")
+                        buildType.ndk.abiFilters.add(abiValue)
+                    }
                 }
             }
         }
@@ -265,13 +269,17 @@ class FlutterPlugin : Plugin<Project> {
                     isShrinkResources = FlutterPluginUtils.isBuiltAsApp(project)
                     // Fallback to `android/app/proguard-rules.pro`.
                     // This way, custom Proguard rules can be configured as needed.
-                    proguardFiles(
+                    val proguardFilesList = mutableListOf<Any>(
                         FlutterPluginUtils
                             .getAndroidExtension(project)
                             .getDefaultProguardFile("proguard-android-optimize.txt"),
-                        flutterProguardRules,
-                        "proguard-rules.pro"
+                        flutterProguardRules
                     )
+                    val proguardRulesFile = project.file("android/app/proguard-rules.pro")
+                    if (proguardRulesFile.exists()) {
+                        proguardFilesList.add("proguard-rules.pro")
+                    }
+                    proguardFiles(*proguardFilesList.toTypedArray())
                 }
             }
         }

@@ -238,6 +238,26 @@ class AssembleCommand extends FlutterCommand {
 
   late final Environment _environment = _createEnvironment();
 
+  /// Maps a platform name to the corresponding flutter build command name.
+  String _getBuildCommandForPlatform(String platform) {
+    if (platform.startsWith('android')) {
+      return 'apk';
+    } else if (platform == 'ios') {
+      return 'ios';
+    } else if (platform == 'darwin' || platform.startsWith('macos')) {
+      return 'macos';
+    } else if (platform.startsWith('linux')) {
+      return 'linux';
+    } else if (platform.startsWith('windows')) {
+      return 'windows';
+    } else if (platform.startsWith('web')) {
+      return 'web';
+    } else {
+      // Fallback to generic message if platform is unknown
+      return '<platform>';
+    }
+  }
+
   /// The environmental configuration for a build invocation.
   Environment _createEnvironment() {
     String? output = stringArg('output');
@@ -327,9 +347,18 @@ class AssembleCommand extends FlutterCommand {
     try {
       decodedDefines = decodeDartDefines(_environment.defines, kDartDefines);
     } on FormatException {
+      final String? platform = _environment.defines[kTargetPlatform];
+      String buildCommandHint;
+      if (platform != null) {
+        // Map platform name to build command name
+        final String buildCommand = _getBuildCommandForPlatform(platform);
+        buildCommandHint = "Try re-running 'flutter build $buildCommand'";
+      } else {
+        buildCommandHint = "Try re-running the appropriate 'flutter build <platform>' command";
+      }
       throwToolExit(
         'Error parsing assemble command: your generated configuration may be out of date. '
-        "Try re-running 'flutter build ios' or the appropriate build command.",
+        '$buildCommandHint.',
       );
     }
     if (deferredTargets.isNotEmpty) {

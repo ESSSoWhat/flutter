@@ -66,7 +66,7 @@ void main() {
     tryToDelete(tempDir);
   });
 
-  Future<void> runWidgetPreview({
+  Future<Process> runWidgetPreview({
     required List<Pattern> expectedMessages,
     Uri? dtdUri,
     bool useWebServer = false,
@@ -115,6 +115,7 @@ void main() {
       }),
     );
     await completer.future;
+    return process!;
   }
 
   void runFlutterClean() {
@@ -134,7 +135,11 @@ void main() {
       'does not recreate project on subsequent runs',
       () async {
         // The first run of 'flutter widget-preview start' should generate a new preview scaffold
-        await runWidgetPreview(expectedMessages: firstLaunchMessagesWeb);
+        final Process firstProcess = await runWidgetPreview(expectedMessages: firstLaunchMessagesWeb);
+        
+        // Terminate the first process before starting the second one
+        firstProcess.kill();
+        await firstProcess.exitCode;
 
         // We shouldn't regenerate the scaffold after the initial run.
         await runWidgetPreview(expectedMessages: subsequentLaunchMessagesWeb);

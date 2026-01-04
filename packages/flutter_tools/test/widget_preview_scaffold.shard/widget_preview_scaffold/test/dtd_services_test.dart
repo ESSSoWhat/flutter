@@ -26,6 +26,37 @@ class FakeFlutterProject extends Fake implements FlutterProject {
   FakeFlutterProject();
 }
 
+/// Creates and launches a DTD server with the given configuration.
+///
+/// Returns the launched [WidgetPreviewDtdServices] instance.
+Future<WidgetPreviewDtdServices> createAndLaunchDtdServer(
+  Logger logger,
+  void Function() onHotRestartPreviewerRequest,
+) async {
+  final dtdServer = WidgetPreviewDtdServices(
+    previewAnalytics: WidgetPreviewAnalytics(
+      analytics: getInitializedFakeAnalyticsInstance(
+        // We don't care about anything written to the file system by analytics, so we're safe
+        // to use a different file system here.
+        fs: MemoryFileSystem.test(),
+        fakeFlutterVersion: FakeFlutterVersion(),
+      ),
+    ),
+    fs: MemoryFileSystem.test(),
+    logger: logger,
+    shutdownHooks: ShutdownHooks(),
+    dtdLauncher: DtdLauncher(
+      logger: logger,
+      artifacts: globals.artifacts!,
+      processManager: globals.processManager,
+    ),
+    onHotRestartPreviewerRequest: onHotRestartPreviewerRequest,
+    project: FakeFlutterProject(),
+  );
+  await dtdServer.launchAndConnect();
+  return dtdServer;
+}
+
 void main() {
   late WidgetPreviewDtdServices dtdServer;
   late LoggingProcessManager loggingProcessManager;
@@ -47,27 +78,10 @@ void main() {
         // Start DTD and register the widget preview DTD services with a custom handler for hot
         // restart requests.
         final hotRestartRequestCompleter = Completer<void>();
-        dtdServer = WidgetPreviewDtdServices(
-          previewAnalytics: WidgetPreviewAnalytics(
-            analytics: getInitializedFakeAnalyticsInstance(
-              // We don't care about anything written to the file system by analytics, so we're safe
-              // to use a different file system here.
-              fs: MemoryFileSystem.test(),
-              fakeFlutterVersion: FakeFlutterVersion(),
-            ),
-          ),
-          fs: MemoryFileSystem.test(),
-          logger: logger,
-          shutdownHooks: ShutdownHooks(),
-          dtdLauncher: DtdLauncher(
-            logger: logger,
-            artifacts: globals.artifacts!,
-            processManager: globals.processManager,
-          ),
-          onHotRestartPreviewerRequest: hotRestartRequestCompleter.complete,
-          project: FakeFlutterProject(),
+        dtdServer = await createAndLaunchDtdServer(
+          logger,
+          hotRestartRequestCompleter.complete,
         );
-        await dtdServer.launchAndConnect();
 
         // Connect to the DTD instance and invoke the hot restart endpoint.
         final dtd = WidgetPreviewScaffoldDtdServices();
@@ -82,29 +96,12 @@ void main() {
     );
 
     testUsingContext(
-      'can set and retreive values from $PersistentPreferences',
+      'can set and retrieve values from $PersistentPreferences',
       () async {
-        dtdServer = WidgetPreviewDtdServices(
-          previewAnalytics: WidgetPreviewAnalytics(
-            analytics: getInitializedFakeAnalyticsInstance(
-              // We don't care about anything written to the file system by analytics, so we're safe
-              // to use a different file system here.
-              fs: MemoryFileSystem.test(),
-              fakeFlutterVersion: FakeFlutterVersion(),
-            ),
-          ),
-          fs: MemoryFileSystem.test(),
-          logger: logger,
-          shutdownHooks: ShutdownHooks(),
-          dtdLauncher: DtdLauncher(
-            logger: logger,
-            artifacts: globals.artifacts!,
-            processManager: globals.processManager,
-          ),
-          onHotRestartPreviewerRequest: () {},
-          project: FakeFlutterProject(),
+        dtdServer = await createAndLaunchDtdServer(
+          logger,
+          () {},
         );
-        await dtdServer.launchAndConnect();
 
         // The properties file should be created by the PersistentProperties constructor.
         final File preferencesFile = dtdServer.preferences.file;

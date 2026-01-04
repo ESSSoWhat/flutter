@@ -1391,7 +1391,7 @@ TerminalHandler setUpTerminalHandler(
 class FakeResidentCompiler extends Fake implements ResidentCompiler {}
 
 class TestRunner extends Fake implements ResidentRunner {
-  var hasHelpBeenPrinted = false;
+  bool hasHelpBeenPrinted = false;
 
   @override
   Future<void> cleanupAfterSignal() async {}

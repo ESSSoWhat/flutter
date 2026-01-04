@@ -37,7 +37,7 @@ WidgetPreview buildWidgetPreview({
 }) {
   Widget Function() previewBuilder;
   previewBuilder = () {
-    return Builder(builder: previewFunction());
+    return Builder(builder: (BuildContext context) => previewFunction() as Widget);
   };
   return WidgetPreview(
     builder: previewBuilder,

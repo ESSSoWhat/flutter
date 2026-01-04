@@ -37,9 +37,17 @@ class WidgetPreviewScaffoldDtdServices with DtdEditorService {
   /// If the connection is successful, the Widget Preview Scaffold will register services and
   /// subscribe to various streams to interact directly with other tooling (e.g., IDEs).
   Future<void> connect({Uri? dtdUri}) async {
-    final Uri dtdWsUri =
-        dtdUri ??
-        Uri.parse(const String.fromEnvironment(kWidgetPreviewDtdUriEnvVar));
+    final Uri dtdWsUri = dtdUri ?? (() {
+      final String envValue = const String.fromEnvironment(kWidgetPreviewDtdUriEnvVar);
+      if (envValue.isEmpty) {
+        // Fall back to null or throw, depending on expected behavior
+        // For test code, we'll allow null/empty to preserve existing behavior
+        throw ArgumentError(
+          'Environment variable $kWidgetPreviewDtdUriEnvVar is not set or is empty.',
+        );
+      }
+      return Uri.parse(envValue);
+    })();
     dtd = await DartToolingDaemon.connect(dtdWsUri);
     unawaited(
       dtd.postEvent(
