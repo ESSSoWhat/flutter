@@ -39,14 +39,15 @@ class WidgetPreviewScaffoldDtdServices with DtdEditorService {
   Future<void> connect({Uri? dtdUri}) async {
     final Uri dtdWsUri = dtdUri ?? (() {
       final String envValue = const String.fromEnvironment(kWidgetPreviewDtdUriEnvVar);
-      if (envValue.isEmpty) {
+      final String trimmedValue = envValue.trim();
+      if (trimmedValue.isEmpty) {
         // Fall back to null or throw, depending on expected behavior
         // For test code, we'll allow null/empty to preserve existing behavior
         throw ArgumentError(
           'Environment variable $kWidgetPreviewDtdUriEnvVar is not set or is empty.',
         );
       }
-      return Uri.parse(envValue);
+      return Uri.parse(trimmedValue);
     })();
     dtd = await DartToolingDaemon.connect(dtdWsUri);
     unawaited(

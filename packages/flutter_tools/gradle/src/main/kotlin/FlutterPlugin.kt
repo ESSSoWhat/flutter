@@ -277,7 +277,10 @@ class FlutterPlugin : Plugin<Project> {
                     )
                     val proguardRulesFile = project.file("android/app/proguard-rules.pro")
                     if (proguardRulesFile.exists()) {
-                        proguardFilesList.add("proguard-rules.pro")
+                        // Add the File object directly to ensure it resolves to the same file
+                        // that was checked for existence, rather than using a string that may
+                        // resolve to a different location relative to the build context.
+                        proguardFilesList.add(proguardRulesFile)
                     }
                     proguardFiles(*proguardFilesList.toTypedArray())
                 }

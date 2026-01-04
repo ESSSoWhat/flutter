@@ -44,6 +44,7 @@ final subsequentLaunchMessagesWeb = <Pattern>[launchingOnDeviceRegExp, 'Done loa
 void main() {
   late Directory tempDir;
   Process? process;
+  final List<Process> processes = [];
   Logger? logger;
   DtdLauncher? dtdLauncher;
   DevtoolsLauncher? devtoolsLauncher;
@@ -57,6 +58,13 @@ void main() {
   });
 
   tearDown(() async {
+    // Kill all processes that were started
+    for (final Process p in processes) {
+      p.kill();
+      await p.exitCode;
+    }
+    processes.clear();
+    // Also kill the current process reference if it exists and wasn't in the list
     process?.kill();
     process = null;
     await dtdLauncher?.dispose();
@@ -74,7 +82,7 @@ void main() {
   }) async {
     expect(expectedMessages, isNotEmpty);
     var i = 0;
-    process = await processManager.start(<String>[
+    final Process newProcess = await processManager.start(<String>[
       flutterBin,
       'widget-preview',
       'start',
@@ -85,9 +93,13 @@ void main() {
       if (devToolsServerAddress != null)
         '--${FlutterCommand.kDevToolsServerAddress}=$devToolsServerAddress',
     ], workingDirectory: tempDir.path);
+    
+    // Track this process for cleanup
+    processes.add(newProcess);
+    process = newProcess;
 
     final completer = Completer<void>();
-    process!.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen((String msg) {
+    newProcess.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen((String msg) {
       printOnFailure('STDOUT: $msg');
       if (completer.isCompleted) {
         return;
@@ -100,12 +112,12 @@ void main() {
       }
     });
 
-    process!.stderr.transform(utf8.decoder).transform(const LineSplitter()).listen((String msg) {
+    newProcess.stderr.transform(utf8.decoder).transform(const LineSplitter()).listen((String msg) {
       printOnFailure('STDERR: $msg');
     });
 
     unawaited(
-      process!.exitCode.then((int exitCode) {
+      newProcess.exitCode.then((int exitCode) {
         if (completer.isCompleted) {
           return;
         }
@@ -115,7 +127,7 @@ void main() {
       }),
     );
     await completer.future;
-    return process!;
+    return newProcess;
   }
 
   void runFlutterClean() {
@@ -140,6 +152,8 @@ void main() {
         // Terminate the first process before starting the second one
         firstProcess.kill();
         await firstProcess.exitCode;
+        // Remove from tracking since it's already terminated
+        processes.remove(firstProcess);
 
         // We shouldn't regenerate the scaffold after the initial run.
         await runWidgetPreview(expectedMessages: subsequentLaunchMessagesWeb);

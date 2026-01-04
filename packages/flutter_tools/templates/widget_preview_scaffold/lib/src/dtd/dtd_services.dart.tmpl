@@ -37,7 +37,10 @@ class WidgetPreviewScaffoldDtdServices with DtdEditorService {
   /// If the connection is successful, the Widget Preview Scaffold will register services and
   /// subscribe to various streams to interact directly with other tooling (e.g., IDEs).
   Future<void> connect({Uri? dtdUri}) async {
-    final Uri dtdWsUri = dtdUri ?? (() {
+    final Uri dtdWsUri;
+    if (dtdUri != null) {
+      dtdWsUri = dtdUri;
+    } else {
       final String envValue = const String.fromEnvironment(kWidgetPreviewDtdUriEnvVar);
       final String trimmedValue = envValue.trim();
       if (trimmedValue.isEmpty) {
@@ -46,8 +49,8 @@ class WidgetPreviewScaffoldDtdServices with DtdEditorService {
           'Please provide a valid DTD URI.',
         );
       }
-      return Uri.parse(trimmedValue);
-    })();
+      dtdWsUri = Uri.parse(trimmedValue);
+    }
     dtd = await DartToolingDaemon.connect(dtdWsUri);
     unawaited(
       dtd.postEvent(
