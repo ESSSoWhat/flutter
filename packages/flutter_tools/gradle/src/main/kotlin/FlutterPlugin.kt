@@ -275,11 +275,15 @@ class FlutterPlugin : Plugin<Project> {
                             .getDefaultProguardFile("proguard-android-optimize.txt"),
                         flutterProguardRules
                     )
-                    val proguardRulesFile = project.file("android/app/proguard-rules.pro")
+                    // Check for proguard-rules.pro at android/app/proguard-rules.pro relative to
+                    // the project root. The file is located at the app module level in the Flutter
+                    // project structure.
+                    val rootProject = project.rootProject
+                    val proguardRulesFile = rootProject.file("android/app/proguard-rules.pro")
                     if (proguardRulesFile.exists()) {
                         // Add the File object directly to ensure it resolves to the same file
-                        // that was checked for existence, rather than using a string that may
-                        // resolve to a different location relative to the build context.
+                        // that was checked for existence. proguardFiles() accepts File objects
+                        // and will use the absolute path.
                         proguardFilesList.add(proguardRulesFile)
                     }
                     proguardFiles(*proguardFilesList.toTypedArray())
