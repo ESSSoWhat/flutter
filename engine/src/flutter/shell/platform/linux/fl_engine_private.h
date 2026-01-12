@@ -244,7 +244,7 @@ void fl_engine_set_platform_message_handler(
  * fl_engine_send_window_metrics_event:
  * @engine: an #FlEngine.
  * @display_id: the display this view is rendering on.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @width: width of the window in pixels.
  * @height: height of the window in pixels.
  * @pixel_ratio: scale factor for window.
@@ -261,7 +261,7 @@ void fl_engine_send_window_metrics_event(FlEngine* engine,
 /**
  * fl_engine_send_mouse_pointer_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @phase: mouse phase.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
@@ -287,7 +287,7 @@ void fl_engine_send_mouse_pointer_event(FlEngine* engine,
 /**
  * fl_engine_send_touch_up_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
  * @y: y location of mouse cursor.
@@ -305,7 +305,7 @@ void fl_engine_send_touch_up_event(FlEngine* engine,
 /**
  * fl_engine_send_touch_down_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
  * @y: y location of mouse cursor.
@@ -322,7 +322,7 @@ void fl_engine_send_touch_down_event(FlEngine* engine,
 /**
  * fl_engine_send_touch_move_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
  * @y: y location of mouse cursor.
@@ -340,7 +340,7 @@ void fl_engine_send_touch_move_event(FlEngine* engine,
 /**
  * fl_engine_send_touch_add_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
  * @y: y location of mouse cursor.
@@ -358,7 +358,7 @@ void fl_engine_send_touch_add_event(FlEngine* engine,
 /**
  * fl_engine_send_touch_remove_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
  * @y: y location of mouse cursor.
@@ -376,7 +376,7 @@ void fl_engine_send_touch_remove_event(FlEngine* engine,
 /**
  * fl_engine_send_pointer_pan_zoom_event:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @timestamp: time when event occurred in microseconds.
  * @x: x location of mouse cursor.
  * @y: y location of mouse cursor.
@@ -436,7 +436,7 @@ gboolean fl_engine_send_key_event_finish(FlEngine* engine,
 /**
  * fl_engine_dispatch_semantics_action:
  * @engine: an #FlEngine.
- * @view_id: the view that the event occured on.
+ * @view_id: the view that the event occurred on.
  * @node_id: the semantics action identifier.
  * @action: the action being dispatched.
  * @data: (allow-none): data associated with the action.

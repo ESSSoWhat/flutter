@@ -205,7 +205,7 @@ void CompositorContext::ScopedFrame::PaintLayerTreeImpeller(
 ///        minimum, if the damage rect is the entire buffer, we must not perform
 ///        a partial repaint. Beyond that, we could only experimentally
 ///        determine what this value should be. From looking at the Flutter
-///        Gallery, we noticed that there are occassionally small partial
+///        Gallery, we noticed that there are occasionally small partial
 ///        repaints which shave off trivial numbers of pixels.
 constexpr float kImpellerRepaintRatio = 0.7f;
 

@@ -46,13 +46,24 @@ class PlatformViewAppState extends State<PlatformViewApp> {
           key: const Key('platform-views-scroll'), // This key is used by the driver test.
           itemCount: 250,
           itemBuilder: (BuildContext context, int index) {
-            return index.isEven
+            if (index.isEven) {
+              // Workaround: Limit banners to prevent crash when more than 5 are on screen.
+              // Only show banners at spaced intervals to ensure max 5 visible at once.
+              // See: https://github.com/flutter/flutter/issues/144339
+              // With 150px spacing items and 50px banners, showing every 6th even index
+              // (every 12th item) ensures max 5 banners visible (assuming ~800px viewport).
+              final int bannerIndex = index ~/ 2;
+              if (bannerIndex % 6 == 0 && bannerIndex < 30) {
                 // Use 320x50 Admob standard banner size.
-                ? SizedBox(width: 320, height: 50, child: _getBannerWidget())
-                // Adjust the height to control number of platform views on screen.
-                // TODO(hellohuanlin): Having more than 5 banners on screen causes an unknown crash.
-                // See: https://github.com/flutter/flutter/issues/144339
-                : const SizedBox(height: 150, child: ColoredBox(color: Colors.yellow));
+                return SizedBox(width: 320, height: 50, child: _getBannerWidget());
+              } else {
+                // Replace additional banners with placeholder to prevent crash.
+                return const SizedBox(height: 50, child: ColoredBox(color: Colors.grey));
+              }
+            } else {
+              // Adjust the height to control number of platform views on screen.
+              return const SizedBox(height: 150, child: ColoredBox(color: Colors.yellow));
+            }
           },
         ),
       ),

@@ -55,7 +55,7 @@ Future<void> runAndroidEngineTests({required ImpellerBackend impellerBackend}) a
 
     // Stdout will produce: "Using the Impeller rendering backend (.*)"
     // TODO(matanlurey): Enable once `flutter drive` retains error logs.
-    // final RegExp impellerStdoutPattern = RegExp('Using the Imepller rendering backend (.*)');
+    // final RegExp impellerStdoutPattern = RegExp('Using the Impeller rendering backend (.*)');
 
     Future<void> runTest(FileSystemEntity file) async {
       final CommandResult result = await runCommand(
@@ -63,7 +63,7 @@ Future<void> runAndroidEngineTests({required ImpellerBackend impellerBackend}) a
         <String>[
           'drive',
           path.relative(file.path, from: androidEngineTestPath),
-          // There are no reason to enable development flags for this test.
+          // There is no reason to enable development flags for this test.
           // Disable them to work around flakiness issues, and in general just
           // make less things start up unnecessarily.
           '--no-dds',
@@ -92,7 +92,7 @@ Future<void> runAndroidEngineTests({required ImpellerBackend impellerBackend}) a
       // final String reportedBackend = stdoutMatch.group(1)!.toLowerCase();
       // if (reportedBackend != impellerBackend.name) {
       //   foundError(<String>[
-      //     'Reported Imepller backend was $reportedBackend, expected ${impellerBackend.name}',
+      //     'Reported Impeller backend was $reportedBackend, expected ${impellerBackend.name}',
       //   ]);
       //   return;
       // }

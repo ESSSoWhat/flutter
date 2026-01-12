@@ -330,7 +330,7 @@ class Rasterizer final : public SnapshotDelegate,
   ///             the frame yet! On the other hand, the pipeline must own the
   ///             layer tree it renders because it keeps a reference to the last
   ///             layer tree around till a new frame is rendered. So a simple
-  ///             reference wont work either. The `Rasterizer::DoDraw` method
+  ///             reference won't work either. The `Rasterizer::DoDraw` method
   ///             actually performs the GPU operations within the layer tree
   ///             pipeline.
   ///

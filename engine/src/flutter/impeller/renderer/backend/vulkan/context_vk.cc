@@ -212,7 +212,7 @@ void ContextVK::Setup(Settings settings) {
   // IHVs to make optimizations and/or disable functionality based on knowledge
   // of the engine version (for example, to work around bugs). We don't tie this
   // to the overall Flutter version as that version is not yet defined when the
-  // engine is compiled. Instead we can manually bump it occassionally.
+  // engine is compiled. Instead we can manually bump it occasionally.
   //
   // variant, major, minor, patch
   application_info.setApplicationVersion(

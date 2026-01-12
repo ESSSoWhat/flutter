@@ -303,10 +303,10 @@ _Line _getLine(ParseStringResult parseResult, int offset) {
   return _Line(lineNumber, content);
 }
 
-Future<void> verifyReleaseBranchState(String workringDirerctory) async {
+Future<void> verifyReleaseBranchState(String workingDirectory) async {
   final ProcessResult result = await Process.run(dart, <String>[
     'bin/check_engine_version.dart',
-  ], workingDirectory: path.join(workringDirerctory, 'dev', 'tools'));
+  ], workingDirectory: path.join(workingDirectory, 'dev', 'tools'));
   if (result.exitCode != 0) {
     foundError(<String>['${result.stderr}']);
   }
@@ -1623,7 +1623,7 @@ Future<void> verifyRepositoryLinks(String workingDirectory) async {
   const Set<String> repoExceptions = <String>{
     'chromium/chromium',
     'clojure/clojure',
-    'dart-lang/test', // TODO(guidezpl): remove when https://github.com/dart-lang/test/issues/2209 is closed
+    'dart-lang/test', // TODO(guidezpl): remove when https://github.com/dart-lang/test/issues/2209 is closed // ignore: todo
     'eseidelGoogle/bezier_perf',
     'flutter/devtools', // TODO(guidezpl): remove when https://github.com/flutter/devtools/issues/7551 is closed
     'flutter/flutter-intellij', // TODO(guidezpl): remove when https://github.com/flutter/flutter-intellij/issues/7342 is closed

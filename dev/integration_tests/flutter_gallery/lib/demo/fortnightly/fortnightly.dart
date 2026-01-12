@@ -122,8 +122,9 @@ over water meant for the whole central valley of California? The story will shoc
                         Text('US', style: textTheme.labelSmall),
                         Text(
                           ' ¬ ',
-                          // TODO(larche): Replace textTheme.headline2.color with a ColorScheme value when known.
-                          style: textTheme.labelSmall!.apply(color: textTheme.displayMedium!.color),
+                          style: textTheme.labelSmall!.apply(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                         Text('CULTURE', style: textTheme.labelSmall),
                       ],

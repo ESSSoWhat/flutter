@@ -109,7 +109,7 @@ final class BuildBucketGoldenScraper {
       throw FormatException('Not a buildbucket log file: $pathOrUrl');
     }
 
-    // Check for occurences of a base64 encoded string.
+    // Check for occurrences of a base64 encoded string.
     //
     // The format looks something like this:
     // [LINE N+0]: See also the base64 encoded /b/s/w/ir/cache/builder/src/flutter/testing/resources/performance_overlay_gold_120fps_new.png:

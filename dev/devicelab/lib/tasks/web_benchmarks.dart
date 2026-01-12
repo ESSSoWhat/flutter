@@ -17,7 +17,6 @@ import '../framework/task_result.dart';
 import '../framework/utils.dart';
 
 /// The port at which the local benchmark server is served.
-/// This is hard-coded and must be the same as the port used for DDC's benchmark at `flutter/dev/benchmarks/macrobenchmarks/lib/web_benchmarks_ddc.dart`.
 const int benchmarkServerPort = 9999;
 
 /// The port at which Chrome listens for a debug connection.
@@ -60,7 +59,7 @@ Future<TaskResult> runWebBenchmark(WebBenchmarkOptions benchmarkOptions) async {
           '--web-browser-debug-port',
           '$chromeDebugPort',
           '--web-launch-url',
-          'http://localhost:$benchmarksAppPort/index.html',
+          'http://localhost:$benchmarksAppPort/index.html?port=$benchmarkServerPort',
           '--debug',
           '--web-run-headless',
           '--no-web-enable-expression-evaluation',
@@ -81,7 +80,7 @@ Future<TaskResult> runWebBenchmark(WebBenchmarkOptions benchmarkOptions) async {
           else
             '--no-web-experimental-hot-reload',
           '--no-web-resources-cdn',
-          'lib/web_benchmarks_ddc.dart',
+          'lib/web_benchmarks.dart',
         ],
       );
       flutterRunProcess.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen((

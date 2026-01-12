@@ -229,9 +229,22 @@ class WidgetPreviewGroupWidget extends StatelessWidget {
   static const _gridSpacing = 8.0;
   static const _gridRunSpacing = 8.0;
 
-  /// The default radius of a Material 3 `Card`, as per documentation for `Card.shape`.
-  // TODO(bkonyi): inherit this from the theme.
-  static const _kCardRadius = Radius.circular(12);
+  /// Gets the card radius from the theme, or defaults to Material 3 default (12).
+  Radius _getCardRadius(BuildContext context) {
+    final CardThemeData cardTheme = CardTheme.of(context);
+    if (cardTheme.shape != null && cardTheme.shape is RoundedRectangleBorder) {
+      final RoundedRectangleBorder roundedShape =
+          cardTheme.shape! as RoundedRectangleBorder;
+      if (roundedShape.borderRadius is BorderRadius) {
+        final BorderRadius borderRadius =
+            roundedShape.borderRadius as BorderRadius;
+        // Use the top-left radius as the standard radius
+        return borderRadius.topLeft;
+      }
+    }
+    // Default Material 3 card radius
+    return const Radius.circular(12);
+  }
 
   Widget _buildGridViewFlex(List<WidgetPreview> previews) {
     return Wrap(
@@ -262,12 +275,13 @@ class WidgetPreviewGroupWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final cardRadius = _getCardRadius(context);
     return Card(
       child: ListTileTheme(
         data: ListTileTheme.of(context).copyWith(
           dense: true,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(_kCardRadius),
+            borderRadius: BorderRadius.all(cardRadius),
           ),
         ),
         child: Theme(

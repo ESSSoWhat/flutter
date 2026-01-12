@@ -685,7 +685,7 @@ void (*epoxy_glCompileShader)(GLuint shader);
 GLuint (*epoxy_glCreateProgram)();
 GLuint (*epoxy_glCreateShader)(GLenum shaderType);
 void (*epoxy_glDeleteFramebuffers)(GLsizei n, const GLuint* framebuffers);
-void (*expoxy_glDeleteShader)(GLuint shader);
+void (*epoxy_glDeleteShader)(GLuint shader);
 void (*epoxy_glDeleteTextures)(GLsizei n, const GLuint* textures);
 void (*epoxy_glFramebufferRenderbuffer)(GLenum target,
                                         GLenum attachment,

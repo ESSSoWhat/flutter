@@ -2482,7 +2482,7 @@ static flutter::PointerData::DeviceKind DeviceKindFromTouchType(UITouch* touch) 
     pointer_data.view_id = self.viewIdentifier;
 
     if (event.timestamp < self.scrollInertiaEventAppKitDeadline) {
-      // Only send the event if it occured before the expected natural end of gesture momentum.
+      // Only send the event if it occurred before the expected natural end of gesture momentum.
       // If received after the deadline, it's not likely the event is from a user-initiated cancel.
       auto packet = std::make_unique<flutter::PointerDataPacket>(1);
       packet->SetPointerData(/*i=*/0, pointer_data);
@@ -2622,7 +2622,7 @@ static flutter::PointerData::DeviceKind DeviceKindFromTouchType(UITouch* touch) 
       break;
     default:
       // continuousScrollEvent: should only ever be triggered with the above phases
-      NSAssert(NO, @"Trackpad pan event occured with unexpected phase 0x%lx",
+      NSAssert(NO, @"Trackpad pan event occurred with unexpected phase 0x%lx",
                (long)recognizer.state);
       break;
   }
@@ -2652,7 +2652,7 @@ static flutter::PointerData::DeviceKind DeviceKindFromTouchType(UITouch* touch) 
       break;
     default:
       // pinchEvent: should only ever be triggered with the above phases
-      NSAssert(NO, @"Trackpad pinch event occured with unexpected phase 0x%lx",
+      NSAssert(NO, @"Trackpad pinch event occurred with unexpected phase 0x%lx",
                (long)recognizer.state);
       break;
   }

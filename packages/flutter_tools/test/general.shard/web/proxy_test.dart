@@ -134,7 +134,7 @@ void main() {
       expect(rule.replace('/users/123'), '/users/123');
     });
 
-    test('replace should replace all occurences', () {
+    test('replace should replace all occurrences', () {
       final rule = RegexProxyRule(
         pattern: RegExp(r'/users/(\d+)/profile'),
         target: 'http://localhost:8080',
@@ -263,7 +263,7 @@ void main() {
       expect(rule.replace('/api/users/123'), '/123');
     });
 
-    test('replace replaces first occurence', () {
+    test('replace replaces first occurrence', () {
       final rule = PrefixProxyRule(
         prefix: '/api/users',
         target: 'http://localhost:8080',

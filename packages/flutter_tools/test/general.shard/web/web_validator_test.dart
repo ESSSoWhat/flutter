@@ -59,7 +59,7 @@ void main() {
   });
 
   testWithoutContext(
-    'WebValidator does not warn about CHROME_EXECUTABLE unless it cant find chrome ',
+    "WebValidator does not warn about CHROME_EXECUTABLE unless it can't find chrome ",
     () async {
       fakeProcessManager.excludedExecutables.add(kMacOSExecutable);
 

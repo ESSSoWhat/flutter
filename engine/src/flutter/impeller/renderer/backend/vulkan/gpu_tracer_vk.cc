@@ -189,7 +189,7 @@ void GPUTracerVK::OnFenceComplete(size_t frame_index) {
         sizeof(uint64_t), vk::QueryResultFlagBits::e64);
     // This may return VK_NOT_READY if the query couldn't be completed, or if
     // there are queries still pending. From local testing, this happens
-    // occassionally on very expensive frames. Its unclear if we can do anything
+    // occasionally on very expensive frames. Its unclear if we can do anything
     // about this, because by design this should only signal after all cmd
     // buffers have signaled. Adding VK_QUERY_RESULT_WAIT_BIT to the flags
     // passed to getQueryPoolResults seems like it would fix this, but actually

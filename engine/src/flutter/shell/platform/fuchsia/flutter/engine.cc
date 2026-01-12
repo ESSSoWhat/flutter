@@ -843,9 +843,9 @@ void Engine::WarmupSkps(
   // use a lambda that captures the smart pointer. We need two levels of
   // indirection because it needs to be the same across all invocations of the
   // raster task lambda from a single invocation of WarmupSkps, but be
-  // different across different invocations of WarmupSkps (so we cant
-  // statically initialialize it in the lambda itself). Basically the result
-  // of a mashup of wierd call dynamics, multithreading, and lifecycle
+  // different across different invocations of WarmupSkps (so we can't
+  // statically initialize it in the lambda itself). Basically the result
+  // of a mashup of weird call dynamics, multithreading, and lifecycle
   // management with C style Skia callbacks.
   std::unique_ptr<SurfaceProducerSurface>* skp_warmup_surface =
       new std::unique_ptr<SurfaceProducerSurface>(nullptr);

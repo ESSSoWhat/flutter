@@ -141,9 +141,9 @@ static int assertOneMessageAndGetSequenceNumber(NSMutableDictionary* messages, N
   XCTAssertGreaterThan(rightClickUpSequenceNumber, rightClickDownSequenceNumber,
                        @"Right-click pointer was released before it was pressed");
   XCTAssertGreaterThan([[hoverSequenceNumbers firstObject] intValue], 4,
-                       @"Hover occured before hover pointer was added");
+                       @"Hover occurred before hover pointer was added");
   XCTAssertGreaterThan(hoverRemovedSequenceNumber, [[hoverSequenceNumbers lastObject] intValue],
-                       @"Hover occured after hover pointer was removed");
+                       @"Hover occurred after hover pointer was removed");
 }
 
 - (void)testPointerHover {
@@ -291,19 +291,19 @@ static int assertOneMessageAndGetSequenceNumber(NSMutableDictionary* messages, N
       @"PointerChange.cancel,device=2,buttons=0,signalKind=PointerSignalKind.scrollInertiaCancel");
 
   XCTAssertGreaterThan(panZoomStartSequenceNumber, panZoomAddedSequenceNumber,
-                       @"PanZoomStart occured before pointer was added");
+                       @"PanZoomStart occurred before pointer was added");
   XCTAssertGreaterThan([[panZoomUpdateSequenceNumbers firstObject] intValue],
-                       panZoomStartSequenceNumber, @"PanZoomUpdate occured before PanZoomStart");
+                       panZoomStartSequenceNumber, @"PanZoomUpdate occurred before PanZoomStart");
   XCTAssertGreaterThan(panZoomEndSequenceNumber,
                        [[panZoomUpdateSequenceNumbers lastObject] intValue],
-                       @"PanZoomUpdate occured after PanZoomEnd");
+                       @"PanZoomUpdate occurred after PanZoomEnd");
   XCTAssertGreaterThan(inertiaCancelSequenceNumber, panZoomEndSequenceNumber,
-                       @"ScrollInertiaCancel occured before PanZoomEnd");
+                       @"ScrollInertiaCancel occurred before PanZoomEnd");
 
   XCTAssertGreaterThan([[hoverSequenceNumbers firstObject] intValue], hoverAddedSequenceNumber,
-                       @"Hover occured before pointer was added");
+                       @"Hover occurred before pointer was added");
   XCTAssertGreaterThan(hoverRemovedSequenceNumber, [[hoverSequenceNumbers lastObject] intValue],
-                       @"Hover occured after pointer was removed");
+                       @"Hover occurred after pointer was removed");
 }
 #pragma clang diagnostic pop
 

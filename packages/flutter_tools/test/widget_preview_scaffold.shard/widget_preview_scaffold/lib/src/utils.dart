@@ -38,14 +38,30 @@ WidgetPreview buildWidgetPreview({
   Widget Function() previewBuilder;
   // Support both Widget Function() and WidgetBuilder (Widget Function(BuildContext))
   // to maintain backward compatibility with code that returns builder functions.
-  if (previewFunction is WidgetBuilder Function()) {
-    // If previewFunction returns a WidgetBuilder, wrap it in a Builder widget
-    previewBuilder = () {
-      return Builder(builder: previewFunction());
-    };
-  } else {
-    // Otherwise, treat previewFunction as returning Widget Function() directly
+  // Check the function signature at assignment time for type safety
+  if (previewFunction is Widget Function()) {
+    // Direct Widget builder - use as-is
     previewBuilder = previewFunction as Widget Function();
+  } else if (previewFunction is WidgetBuilder Function()) {
+    // WidgetBuilder function - wrap in Builder widget
+    final WidgetBuilder Function() builderFunction = previewFunction as WidgetBuilder Function();
+    previewBuilder = () => Builder(builder: builderFunction());
+  } else {
+    // Fallback: check return value at runtime (less safe, but maintains compatibility)
+    // This handles cases where the function signature doesn't match exactly
+    previewBuilder = () {
+      final Object? result = previewFunction();
+      if (result is WidgetBuilder) {
+        return Builder(builder: result);
+      }
+      if (result is Widget) {
+        return result;
+      }
+      throw TypeError(
+        'previewFunction must return either a Widget or WidgetBuilder, '
+        'but returned ${result.runtimeType}',
+      );
+    };
   }
   return WidgetPreview(
     builder: previewBuilder,
@@ -93,7 +109,7 @@ class VerticalSpacer extends StatelessWidget {
 
 /// A basic horizontal spacer.
 class HorizontalSpacer extends StatelessWidget {
-  /// Creates a basic vertical spacer.
+  /// Creates a basic horizontal spacer.
   const HorizontalSpacer({super.key});
 
   @override

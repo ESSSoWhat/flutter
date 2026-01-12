@@ -10,7 +10,7 @@ import io.flutter.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/// A representation of the change that occured to an editing state, along with the resulting
+/// A representation of the change that occurred to an editing state, along with the resulting
 /// composing and selection regions.
 public final class TextEditingDelta {
   private @NonNull CharSequence oldText;

@@ -536,7 +536,7 @@ class JavaFormatChecker extends FormatChecker {
   late final String javaExe;
   late final File googleJavaFormatJar;
 
-  // String to return if java formatting cant check java code for any reson.
+  // String to return if java formatting can't check java code for any reason.
   static const String _javaFormatErrorString = 'Java Formatting Error';
 
   Future<String> _getGoogleJavaFormatVersion() async {

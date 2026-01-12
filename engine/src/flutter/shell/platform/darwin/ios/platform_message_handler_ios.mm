@@ -115,7 +115,7 @@ void PlatformMessageHandlerIos::SetMessageHandler(const std::string& channel,
                                                   FlutterBinaryMessageHandler handler,
                                                   NSObject<FlutterTaskQueue>* task_queue) {
   FML_CHECK(platform_task_runner_->RunsTasksOnCurrentThread());
-  // Use `respondsToSelector` instead of `conformsToProtocol` to accomodate
+  // Use `respondsToSelector` instead of `conformsToProtocol` to accommodate
   // injecting your own `FlutterTaskQueue`. This is not a supported usage but
   // not one worth breaking.
   FML_CHECK(!task_queue || [task_queue respondsToSelector:@selector(dispatch:)]);

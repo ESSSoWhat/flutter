@@ -62,11 +62,22 @@ class StockArrow extends StatelessWidget {
     return 100 + (normalizedPercentChange * 8.0).floor() * 100;
   }
 
-  Color _colorForPercentChange(double percentChange) {
+  Color _colorForPercentChange(double percentChange, BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    final int colorIndex = _colorIndexForPercentChange(percentChange);
+    
     if (percentChange > 0) {
-      return Colors.green[_colorIndexForPercentChange(percentChange)]!;
+      // Use primary color for positive changes, with intensity based on percentage
+      final Color baseColor = colorScheme.primary;
+      // Blend with a green tint to maintain the positive/gain semantic meaning
+      final Color greenTint = Colors.green[colorIndex]!;
+      return Color.lerp(baseColor, greenTint, 0.5)!;
     }
-    return Colors.red[_colorIndexForPercentChange(percentChange)]!;
+    // Use error color for negative changes, with intensity based on percentage
+    final Color baseColor = colorScheme.error;
+    // Blend with a red tint to maintain the negative/loss semantic meaning
+    final Color redTint = Colors.red[colorIndex]!;
+    return Color.lerp(baseColor, redTint, 0.5)!;
   }
 
   @override
@@ -77,8 +88,7 @@ class StockArrow extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
       child: CustomPaint(
         painter: StockArrowPainter(
-          // TODO(jackson): This should change colors with the theme
-          color: _colorForPercentChange(percentChange),
+          color: _colorForPercentChange(percentChange, context),
           percentChange: percentChange,
         ),
       ),

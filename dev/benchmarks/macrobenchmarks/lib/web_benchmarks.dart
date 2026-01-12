@@ -103,7 +103,16 @@ Future<void> main(List<String> args) async {
     final int port = int.parse(argResults['port'] as String);
     serverOrigin = Uri.http('localhost:$port');
   } else {
-    serverOrigin = Uri.base;
+    // Fallback to reading port from URL query parameters for Flutter Web,
+    // which doesn't support --dart-entrypoint-args yet.
+    final Uri currentUri = Uri.parse(web.window.location.href);
+    final String? portFromUrl = currentUri.queryParameters['port'];
+    if (portFromUrl != null) {
+      final int port = int.parse(portFromUrl);
+      serverOrigin = Uri.http('localhost:$port');
+    } else {
+      serverOrigin = Uri.base;
+    }
   }
 
   _client = LocalBenchmarkServerClient(serverOrigin);
@@ -120,13 +129,6 @@ Future<void> main(List<String> args) async {
   web.window.location.reload();
 }
 
-/// Shared entrypoint used for DDC, which runs the macrobenchmarks server on a
-/// separate port.
-// TODO(markzipan): Use `main` in `'web_benchmarks.dart` when Flutter Web supports the `--dart-entrypoint-args` flag.
-// ignore: unreachable_from_main
-Future<void> sharedMain(List<String> args) {
-  return main(args);
-}
 
 Future<void> _runBenchmark(String benchmarkName) async {
   final RecorderFactory? recorderFactory = benchmarks[benchmarkName];
