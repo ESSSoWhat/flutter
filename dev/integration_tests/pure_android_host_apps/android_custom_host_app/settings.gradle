@@ -4,4 +4,27 @@
 
 include ':SampleApp'
 setBinding(new Binding([gradle: this]))
-evaluate(new File(settingsDir.parentFile, 'hello/.android/include_flutter.groovy'))
+def helloFlutterScript = new File(settingsDir.parentFile, 'hello/.android/include_flutter.groovy')
+if (helloFlutterScript.exists()) {
+    try {
+        evaluate(helloFlutterScript)
+    } catch (Exception e) {
+        throw new GradleException(
+            "Failed to evaluate Flutter module script at '${helloFlutterScript}'. " +
+            "This project requires a properly configured Flutter module in '${settingsDir.parentFile}/hello'. " +
+            "Please ensure the module exists and run 'flutter pub get' in the hello directory. " +
+            "Original error: ${e.message}",
+            e
+        )
+    }
+} else {
+    // If the hello Flutter module doesn't exist, provide a helpful error message
+    // This project requires a Flutter module to be created in a sibling 'hello' directory
+    // See README.md for instructions on creating the module
+    throw new GradleException(
+        "Flutter module not found. " +
+        "This project requires a Flutter module in '${settingsDir.parentFile}/hello'. " +
+        "Please create it using: flutter create -t module hello " +
+        "and then run 'flutter pub get' in that directory."
+    )
+}

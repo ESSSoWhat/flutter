@@ -4,4 +4,7 @@
 
 include ':app'
 setBinding(new Binding([gradle: this]))
-evaluate(new File(settingsDir.parentFile, 'hello/.android/include_flutter.groovy'))
+def helloFlutterScript = new File(settingsDir.parentFile, 'hello/.android/include_flutter.groovy')
+if (helloFlutterScript.exists()) {
+    evaluate(helloFlutterScript)
+}

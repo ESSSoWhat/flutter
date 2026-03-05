@@ -41,10 +41,10 @@ WidgetPreview buildWidgetPreview({
   // Check the function signature at assignment time for type safety
   if (previewFunction is Widget Function()) {
     // Direct Widget builder - use as-is
-    previewBuilder = previewFunction as Widget Function();
+    previewBuilder = previewFunction;
   } else if (previewFunction is WidgetBuilder Function()) {
     // WidgetBuilder function - wrap in Builder widget
-    final WidgetBuilder Function() builderFunction = previewFunction as WidgetBuilder Function();
+    final WidgetBuilder Function() builderFunction = previewFunction;
     previewBuilder = () => Builder(builder: builderFunction());
   } else {
     // Fallback: check return value at runtime (less safe, but maintains compatibility)

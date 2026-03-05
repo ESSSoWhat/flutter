@@ -23,4 +23,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "My Application"
 include(":app")
-apply(from = File(settingsDir.parentFile.toString() + "/hello/.android/include_flutter.groovy"))
+val helloFlutterScript = File(settingsDir.parentFile.toString() + "/hello/.android/include_flutter.groovy")
+if (helloFlutterScript.exists()) {
+    apply(from = helloFlutterScript)
+}
