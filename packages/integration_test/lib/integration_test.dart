@@ -53,8 +53,6 @@ class IntegrationTestWidgetsFlutterBinding extends LiveTestWidgetsFlutterBinding
       }
       callbackManager.cleanup();
 
-      // TODO(jiahaog): Print the message directing users to run with
-      // `flutter test` when Web is supported.
       if (!_shouldReportResultsToNative || kIsWeb) {
         return;
       }
@@ -399,9 +397,6 @@ https://docs.flutter.dev/testing/integration-tests
     // The engine could batch FrameTimings and send them only once per second.
     // Delay for a sufficient time so either old FrameTimings are flushed and not
     // interfering our measurements here, or new FrameTimings are all reported.
-    // TODO(CareF): remove this when flush FrameTiming is readily in engine.
-    //              See https://github.com/flutter/flutter/issues/64808
-    //              and https://github.com/flutter/flutter/issues/67593
     final List<FrameTiming> frameTimings = <FrameTiming>[];
     Future<void> delayForFrameTimings() async {
       int count = 0;
@@ -445,8 +440,6 @@ https://docs.flutter.dev/testing/integration-tests
     // Disable this because Integration Tests follow the semantics of
     // [AutomatedTestWidgetsFlutterBinding] that does not log the stack traces
     // live, and avoids the doubly logged stack trace.
-    // TODO(jiahaog): Integration test binding should not inherit from
-    // `LiveTestWidgetsFlutterBinding` https://github.com/flutter/flutter/issues/81534
   }
 }
 

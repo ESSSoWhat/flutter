@@ -10,15 +10,11 @@ buildscript {
         google()
         mavenCentral()
     }
-
     dependencies {
         classpath("com.android.tools.build:gradle:8.2.1")
     }
 }
-
-plugins {
-    id("com.android.library")
-}
+apply(plugin = "com.android.library")
 
 rootProject.allprojects {
     repositories {

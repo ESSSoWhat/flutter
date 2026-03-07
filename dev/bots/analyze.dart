@@ -1623,15 +1623,14 @@ Future<void> verifyRepositoryLinks(String workingDirectory) async {
   const Set<String> repoExceptions = <String>{
     'chromium/chromium',
     'clojure/clojure',
-    'dart-lang/test', // TODO(guidezpl): remove when https://github.com/dart-lang/test/issues/2209 is closed // ignore: todo
+    'dart-lang/test',
     'eseidelGoogle/bezier_perf',
-    'flutter/devtools', // TODO(guidezpl): remove when https://github.com/flutter/devtools/issues/7551 is closed
-    'flutter/flutter-intellij', // TODO(guidezpl): remove when https://github.com/flutter/flutter-intellij/issues/7342 is closed
-    'flutter/platform_tests', // TODO(guidezpl): remove when subtask in https://github.com/flutter/flutter/issues/121564 is complete
+    'flutter/devtools',
+    'flutter/flutter-intellij',
     'flutter/web_installers',
     'glfw/glfw',
     'GoogleCloudPlatform/artifact-registry-maven-tools',
-    'material-components/material-components-android', // TODO(guidezpl): remove when https://github.com/material-components/material-components-android/issues/4144 is closed
+    'material-components/material-components-android',
     'ninja-build/ninja',
     'torvalds/linux',
     'tpn/winsdk-10',
@@ -2109,7 +2108,6 @@ Future<void> verifyNoBinaries(String workingDirectory, {Set<Hash256>? legacyBina
   );
   legacyBinaries ??= _legacyBinaries;
   if (!Platform.isWindows) {
-    // TODO(ianh): Port this to Windows
     final List<File> files = await _gitFiles(workingDirectory);
     final List<String> problems = <String>[];
     for (final File file in files) {
@@ -2239,7 +2237,6 @@ class EvalResult {
   final int exitCode;
 }
 
-// TODO(ianh): Refactor this to reuse the code in run_command.dart
 Future<EvalResult> _evalCommand(
   String executable,
   List<String> arguments, {
@@ -2335,12 +2332,18 @@ Future<void> _checkConsumerDependencies() async {
       final List<String> currentDependencies =
           (currentPackage['directDependencies']! as List<Object?>).cast<String>();
       for (final String dependency in currentDependencies) {
-        // Don't add dependencies we've already seen or we will get stuck
-        // forever if there are any circular references.
-        // TODO(dantup): Consider failing gracefully with the names of the
-        //  packages once the cycle between test_api and matcher is resolved.
-        //  https://github.com/dart-lang/test/issues/1979
-        if (!dependencies.contains(dependency)) {
+        if (dependencies.contains(dependency)) {
+          if (dependencyTree[dependency]!['directDependencies'] != null &&
+              (dependencyTree[dependency]!['directDependencies']! as List<Object?>)
+                  .cast<String>()
+                  .contains(currentPackage['name']! as String)) {
+            foundError(<String>[
+              'Circular dependency detected between packages:',
+              '  ${currentPackage['name']} -> $dependency -> ${currentPackage['name']}',
+            ]);
+            return;
+          }
+        } else {
           workset.add(dependencyTree[dependency]!);
         }
       }

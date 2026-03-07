@@ -82,8 +82,10 @@ Future<void> runTasks(
             'Total ${failureCount + 1} executions: $failureCount failures and 1 false positive.',
           );
           print('flaky: true');
-          // TODO(ianh): stop ignoring this failure. We should set exitCode=1, and quit
-          // if exitOnFirstTestFailure is true.
+          exitCode = 1;
+          if (exitOnFirstTestFailure) {
+            return;
+          }
         } else {
           print('Test passed on first attempt.');
           print('flaky: false');

@@ -30,6 +30,16 @@ final String _targetWithBlockedServiceWorkers = path.join(
 );
 final String _targetPath = path.join(_testAppDirectory, _target);
 
+/// Cross-platform copy file within [directory].
+void _copyInDirectory(String directory, String source, String target) {
+  File(path.join(directory, source)).copySync(path.join(directory, target));
+}
+
+/// Cross-platform rename/move file within [directory].
+void _moveInDirectory(String directory, String source, String target) {
+  File(path.join(directory, source)).renameSync(path.join(directory, target));
+}
+
 // Some paths are not guaranteed to actually be requested by the time we finish the test, so we just
 // ignore them and not make them part of the tracked requests or expectations.
 final Set<String> _ignoreRequestPaths = <String>{
@@ -179,10 +189,7 @@ Future<void> _rebuildApp({
 }) async {
   await _setAppVersion(version);
   await runCommand(_flutter, <String>['clean'], workingDirectory: _testAppDirectory);
-  await runCommand('cp', <String>[
-    _testTypeToIndexFile(testType),
-    'index.html',
-  ], workingDirectory: _testAppWebDirectory);
+  _copyInDirectory(_testAppWebDirectory, _testTypeToIndexFile(testType), 'index.html');
   await runCommand(
     _flutter,
     <String>['build', 'web', '--no-web-resources-cdn', '--profile', '-t', target],
@@ -297,8 +304,6 @@ Future<void> runWebServiceWorkerTest({
     server = await AppServer.start(
       headless: headless,
       cacheControl: cacheControl,
-      // TODO(yjbanov): use a better port disambiguation strategy than trying
-      //                to guess what ports other tests use.
       appUrl: 'http://localhost:$serverPort/index.html',
       serverPort: serverPort,
       browserDebugPort: browserDebugPort,
@@ -322,10 +327,7 @@ Future<void> runWebServiceWorkerTest({
   }
 
   // Preserve old index.html as index_og.html so we can restore it later for other tests
-  await runCommand('mv', <String>[
-    'index.html',
-    'index_og.html',
-  ], workingDirectory: _testAppWebDirectory);
+  _moveInDirectory(_testAppWebDirectory, 'index.html', 'index_og.html');
 
   final bool shouldExpectFlutterJs = testType != ServiceWorkerTestType.withoutFlutterJs;
 
@@ -461,11 +463,6 @@ Future<void> runWebServiceWorkerTest({
     print('No cache: test page reload after rebuild');
     await _rebuildApp(version: 4, testType: testType, target: _target);
 
-    // TODO(yjbanov): when running Chrome with DevTools protocol, for some
-    // reason a hard refresh is still required. This works without a hard
-    // refresh when running Chrome manually as normal. At the time of writing
-    // this test I wasn't able to figure out what's wrong with the way we run
-    // Chrome from tests.
     await server!.chrome.reloadPage(ignoreCache: true);
     await waitForAppToLoad(<String, int>{'CLOSE': 1, 'flutter_service_worker.js': 1});
     expectRequestCounts(<String, int>{
@@ -483,10 +480,7 @@ Future<void> runWebServiceWorkerTest({
     expect(reportedVersion, '4');
     reportedVersion = null;
   } finally {
-    await runCommand('mv', <String>[
-      'index_og.html',
-      'index.html',
-    ], workingDirectory: _testAppWebDirectory);
+    _moveInDirectory(_testAppWebDirectory, 'index_og.html', 'index.html');
     await _setAppVersion(1);
     await server?.stop();
   }
@@ -512,8 +506,6 @@ Future<void> runWebServiceWorkerTestWithCachingResources({
     server = await AppServer.start(
       headless: headless,
       cacheControl: cacheControl,
-      // TODO(yjbanov): use a better port disambiguation strategy than trying
-      //                to guess what ports other tests use.
       appUrl: 'http://localhost:$serverPort/index.html',
       serverPort: serverPort,
       browserDebugPort: browserDebugPort,
@@ -536,10 +528,7 @@ Future<void> runWebServiceWorkerTestWithCachingResources({
   }
 
   // Preserve old index.html as index_og.html so we can restore it later for other tests
-  await runCommand('mv', <String>[
-    'index.html',
-    'index_og.html',
-  ], workingDirectory: _testAppWebDirectory);
+  _moveInDirectory(_testAppWebDirectory, 'index.html', 'index_og.html');
 
   final bool usesFlutterBootstrapJs = testType == ServiceWorkerTestType.generatedEntrypoint;
   final bool shouldExpectFlutterJs =
@@ -632,10 +621,7 @@ Future<void> runWebServiceWorkerTestWithCachingResources({
       if (!headless) ...<String, int>{'favicon.png': 1},
     });
   } finally {
-    await runCommand('mv', <String>[
-      'index_og.html',
-      'index.html',
-    ], workingDirectory: _testAppWebDirectory);
+    _moveInDirectory(_testAppWebDirectory, 'index_og.html', 'index.html');
     await server?.stop();
   }
 
@@ -659,8 +645,6 @@ Future<void> runWebServiceWorkerTestWithBlockedServiceWorkers({required bool hea
     server = await AppServer.start(
       headless: headless,
       cacheControl: cacheControl,
-      // TODO(yjbanov): use a better port disambiguation strategy than trying
-      //                to guess what ports other tests use.
       appUrl: 'http://localhost:$serverPort/index.html',
       serverPort: serverPort,
       browserDebugPort: browserDebugPort,
@@ -683,10 +667,7 @@ Future<void> runWebServiceWorkerTestWithBlockedServiceWorkers({required bool hea
   }
 
   // Preserve old index.html as index_og.html so we can restore it later for other tests
-  await runCommand('mv', <String>[
-    'index.html',
-    'index_og.html',
-  ], workingDirectory: _testAppWebDirectory);
+  _moveInDirectory(_testAppWebDirectory, 'index.html', 'index_og.html');
 
   print('BEGIN runWebServiceWorkerTestWithBlockedServiceWorkers(headless: $headless)');
   try {
@@ -710,10 +691,7 @@ Future<void> runWebServiceWorkerTestWithBlockedServiceWorkers({required bool hea
       if (!headless) ...<String, int>{'manifest.json': 1, 'favicon.png': 1},
     });
   } finally {
-    await runCommand('mv', <String>[
-      'index_og.html',
-      'index.html',
-    ], workingDirectory: _testAppWebDirectory);
+    _moveInDirectory(_testAppWebDirectory, 'index_og.html', 'index.html');
     await server?.stop();
   }
   print('END runWebServiceWorkerTestWithBlockedServiceWorkers(headless: $headless)');
@@ -735,8 +713,6 @@ Future<void> runWebServiceWorkerTestWithCustomServiceWorkerVersion({required boo
     server = await AppServer.start(
       headless: headless,
       cacheControl: cacheControl,
-      // TODO(yjbanov): use a better port disambiguation strategy than trying
-      //                to guess what ports other tests use.
       appUrl: 'http://localhost:$serverPort/index.html',
       serverPort: serverPort,
       browserDebugPort: browserDebugPort,
@@ -759,10 +735,7 @@ Future<void> runWebServiceWorkerTestWithCustomServiceWorkerVersion({required boo
   }
 
   // Preserve old index.html as index_og.html so we can restore it later for other tests
-  await runCommand('mv', <String>[
-    'index.html',
-    'index_og.html',
-  ], workingDirectory: _testAppWebDirectory);
+  _moveInDirectory(_testAppWebDirectory, 'index.html', 'index_og.html');
 
   print('BEGIN runWebServiceWorkerTestWithCustomServiceWorkerVersion(headless: $headless)');
   try {
@@ -826,10 +799,7 @@ Future<void> runWebServiceWorkerTestWithCustomServiceWorkerVersion({required boo
       if (!headless) ...<String, int>{'manifest.json': 1, 'favicon.png': 1},
     });
   } finally {
-    await runCommand('mv', <String>[
-      'index_og.html',
-      'index.html',
-    ], workingDirectory: _testAppWebDirectory);
+    _moveInDirectory(_testAppWebDirectory, 'index_og.html', 'index.html');
     await server?.stop();
   }
   print('END runWebServiceWorkerTestWithCustomServiceWorkerVersion(headless: $headless)');

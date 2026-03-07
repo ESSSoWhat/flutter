@@ -52,12 +52,12 @@ WidgetPreview buildWidgetPreview({
     previewBuilder = () {
       final Object? result = previewFunction();
       if (result is WidgetBuilder) {
-        return Builder(builder: result);
+        return Builder(builder: (BuildContext context) => result(context));
       }
       if (result is Widget) {
         return result;
       }
-      throw TypeError(
+      throw ArgumentError(
         'previewFunction must return either a Widget or WidgetBuilder, '
         'but returned ${result.runtimeType}',
       );

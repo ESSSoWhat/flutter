@@ -47,7 +47,6 @@ class WebTestsSuite {
   /// The key in the map is whether it's for `wasm` mode or not. The value
   /// is the list of tests known to fail for that mode.
   //
-  // TODO(yjbanov): we're getting rid of this as part of https://github.com/flutter/flutter/projects/60
   static const Map<bool, List<String>> kWebTestFileKnownFailures = <bool, List<String>>{
     // useWasm: false
     false: <String>[
@@ -57,7 +56,6 @@ class WebTestsSuite {
       'test/examples/sector_layout_test.dart',
 
       // These tests are broken and need to be fixed.
-      // TODO(yjbanov): https://github.com/flutter/flutter/issues/71604
       'test/material/text_field_test.dart',
       'test/widgets/performance_overlay_test.dart',
       'test/widgets/html_element_view_test.dart',
@@ -72,7 +70,6 @@ class WebTestsSuite {
       'test/examples/sector_layout_test.dart',
 
       // These tests are broken and need to be fixed.
-      // TODO(jacksongardner): https://github.com/flutter/flutter/issues/71604
       'test/material/text_field_test.dart',
       'test/widgets/performance_overlay_test.dart',
     ],
@@ -677,8 +674,6 @@ class WebTestsSuite {
       environment: <String, String>{'FLUTTER_WEB': 'true'},
     );
     // metriciFile is a transitional file that needs to be deleted once it is parsed.
-    // TODO(godofredoc): Ensure metricFile is parsed and aggregated before deleting.
-    // https://github.com/flutter/flutter/issues/146003
     if (!dryRun) {
       metricFile.deleteSync();
     }
@@ -715,9 +710,6 @@ class WebTestsSuite {
       printProgress('Starting chromedriver');
       // Assume chromedriver is in the PATH.
       _chromeDriver = await startCommand(
-        // TODO(ianh): this is the only remaining consumer of startCommand other than runCommand
-        // and it doesn't use most of startCommand's features; we could simplify this a lot by
-        // inlining the relevant parts of startCommand here.
         'chromedriver',
         <String>['--port=4444', '--log-level=INFO', '--enable-chrome-logs'],
       );

@@ -18,24 +18,18 @@ final math.Random _rng = math.Random();
 class Stock {
   Stock(this.symbol, this.name, this.lastSale, this.marketCap, this.percentChange);
 
-  Stock.fromFields(List<String> fields) {
-    // TODO(jackson): This class should only have static data, not lastSale, etc.
-    // "Symbol","Name","LastSale","MarketCap","IPOyear","Sector","industry","Summary Quote",
-    lastSale = 0.0;
-    try {
-      lastSale = double.parse(fields[2]);
-    } catch (_) {}
-    symbol = fields[0];
-    name = fields[1];
-    marketCap = fields[4];
-    percentChange = (_rng.nextDouble() * 20) - 10;
-  }
+  Stock.fromFields(List<String> fields)
+      : symbol = fields[0],
+        name = fields[1],
+        marketCap = fields[4],
+        lastSale = double.tryParse(fields[2]) ?? 0.0,
+        percentChange = (_rng.nextDouble() * 20) - 10;
 
-  late String symbol;
-  late String name;
-  late double lastSale;
-  late String marketCap;
-  late double percentChange;
+  final String symbol;
+  final String name;
+  final double lastSale;
+  final String marketCap;
+  final double percentChange;
 }
 
 class StockData extends ChangeNotifier {
@@ -52,6 +46,11 @@ class StockData extends ChangeNotifier {
   List<String> get allSymbols => _symbols;
 
   Stock? operator [](String symbol) => _stocks[symbol];
+
+  void updateStock(Stock stock) {
+    _stocks[stock.symbol] = stock;
+    notifyListeners();
+  }
 
   bool get loading => _httpClient != null;
 

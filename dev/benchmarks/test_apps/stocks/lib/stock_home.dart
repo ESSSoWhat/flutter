@@ -244,17 +244,22 @@ class StockHomeState extends State<StockHome> {
   }
 
   void _buyStock(Stock stock) {
-    setState(() {
-      stock.percentChange = 100.0 * (1.0 / stock.lastSale);
-      stock.lastSale += 1.0;
-    });
+    final double newLastSale = stock.lastSale + 1.0;
+    final Stock updatedStock = Stock(
+      stock.symbol,
+      stock.name,
+      newLastSale,
+      stock.marketCap,
+      100.0 * (1.0 / newLastSale),
+    );
+    widget.stocks.updateStock(updatedStock);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Purchased ${stock.symbol} for ${stock.lastSale}'),
+        content: Text('Purchased ${stock.symbol} for $newLastSale'),
         action: SnackBarAction(
           label: 'BUY MORE',
           onPressed: () {
-            _buyStock(stock);
+            _buyStock(updatedStock);
           },
         ),
       ),

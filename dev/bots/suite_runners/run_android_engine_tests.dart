@@ -54,8 +54,6 @@ Future<void> runAndroidEngineTests({required ImpellerBackend impellerBackend}) a
     );
 
     // Stdout will produce: "Using the Impeller rendering backend (.*)"
-    // TODO(matanlurey): Enable once `flutter drive` retains error logs.
-    // final RegExp impellerStdoutPattern = RegExp('Using the Impeller rendering backend (.*)');
 
     Future<void> runTest(FileSystemEntity file) async {
       final CommandResult result = await runCommand(
@@ -79,23 +77,6 @@ Future<void> runAndroidEngineTests({required ImpellerBackend impellerBackend}) a
         foundError(<String>['No stdout produced.']);
         return;
       }
-
-      // TODO(matanlurey): Enable once `flutter drive` retains error logs.
-      // https://github.com/flutter/flutter/issues/162087.
-      //
-      // final Match? stdoutMatch = impellerStdoutPattern.firstMatch(stdout);
-      // if (stdoutMatch == null) {
-      //   foundError(<String>['Could not find pattern ${impellerStdoutPattern.pattern}.', stdout]);
-      //   return;
-      // }
-
-      // final String reportedBackend = stdoutMatch.group(1)!.toLowerCase();
-      // if (reportedBackend != impellerBackend.name) {
-      //   foundError(<String>[
-      //     'Reported Impeller backend was $reportedBackend, expected ${impellerBackend.name}',
-      //   ]);
-      //   return;
-      // }
     }
 
     for (final FileSystemEntity file in mains) {

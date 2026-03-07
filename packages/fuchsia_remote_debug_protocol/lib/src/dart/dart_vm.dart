@@ -49,8 +49,6 @@ Future<vms.VmService> _waitAndConnect(Uri uri, {Duration timeout = _kConnectTime
       await service.getVersion();
       return service;
     } catch (e) {
-      // We should not be catching all errors arbitrarily here, this might hide real errors.
-      // TODO(ianh): Determine which exceptions to catch here.
       await socket.close();
       if (attempts > 5) {
         _log.warning('It is taking an unusually long time to connect to the VM...');

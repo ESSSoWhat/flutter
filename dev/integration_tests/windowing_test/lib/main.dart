@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: invalid_use_of_internal_member
+// ignore_for_file: invalid_use_of_internal_member, implementation_imports
 
 import 'dart:async';
 import 'dart:convert';

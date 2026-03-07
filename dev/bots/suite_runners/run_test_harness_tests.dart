@@ -145,7 +145,6 @@ Future<void> _validateEngineRevision() async {
     'flutter_tester$exe',
   );
 
-  // TODO(matanlurey): Revisit with the Dart team if this is true now that they use FLUTTER_PREBUILT_ENGINE_VERSION=...
   if (runningInDartHHHBot) {
     // The Dart HHH bots intentionally modify the local artifact cache
     // and then use this script to run Flutter's test suites.

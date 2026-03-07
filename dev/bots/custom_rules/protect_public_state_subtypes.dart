@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// TODO(nate-thegrate): remove this file if @protected changes, or add a test if it doesn't.
+// cSpell:ignore thegrate
 // https://github.com/dart-lang/sdk/issues/57094
 
 import 'package:analyzer/dart/analysis/results.dart';

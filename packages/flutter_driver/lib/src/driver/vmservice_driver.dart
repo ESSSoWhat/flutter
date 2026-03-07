@@ -48,8 +48,6 @@ class VMServiceFlutterDriver extends FlutterDriver {
     // If the user has already supplied an isolate number/URL to the Dart VM
     // service, then this won't be run as it is unnecessary.
     if (Platform.isFuchsia && isolateNumber == null) {
-      // TODO(awdavies): Use something other than print. On fuchsia
-      // `stderr`/`stdout` appear to have issues working correctly.
       driverLog = (String source, String message) {
         print('$source: $message'); // ignore: avoid_print
       };
